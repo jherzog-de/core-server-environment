@@ -42,6 +42,7 @@ services:
     image: portainer/portainer-ce:${PORTAINER_VERSION}
     container_name: portainer
     restart: unless-stopped
+    user: "1000"
     networks:
       - traefik_net
     volumes:
@@ -60,6 +61,7 @@ services:
     image: prom/prometheus:${PROMETHEUS_VERSION}
     container_name: prometheus
     restart: unless-stopped
+    user: "1000"
     networks:
       - traefik_net
     environment:
