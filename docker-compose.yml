@@ -24,9 +24,9 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ./traefik/traefik.yml:/traefik.yml:ro
-      - ./traefik/secrets/dashboard.htpasswd:/run/secrets/dashboard.htpasswd:ro
-      - ${VOLUME_PATH_TRAEFIK_ACME}:/acme.json
+      - ${VOLUME_PATH_TRAEFIK}/traefik.yml:/traefik.yml:ro
+      - ${VOLUME_PATH_TRAEFIK}/secrets/dashboard.htpasswd:/run/secrets/dashboard.htpasswd:ro
+      - ${VOLUME_PATH_TRAEFIK}/acme.json:/acme.json
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.traefik.rule=Host(`${TRAEFIK_DOMAIN}`)"
@@ -69,8 +69,8 @@ services:
       - TZ=${TZ}
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
-      - ${VOLUME_PATH_PROMETHEUS}:/prometheus
+      - ${VOLUME_PATH_PROMETHEUS}/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ${VOLUME_PATH_PROMETHEUS}/persistant:/prometheus
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.prometheus.rule=Host(`${PROMETHEUS_DOMAIN}`)"
