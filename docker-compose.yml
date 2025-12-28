@@ -35,6 +35,8 @@ services:
       - "traefik.http.routers.traefik.tls.certresolver=letsencrypt"
       - "traefik.http.routers.traefik.middlewares=traefik-auth"
       - "traefik.http.middlewares.traefik-auth.basicauth.usersfile=/run/secrets/dashboard.htpasswd"
+    command:
+      - "--certificatesresolvers.letsencrypt.acme.email=${LETSENCRYPT_EMAIL}"
 
   portainer:
     image: portainer/portainer-ce:${PORTAINER_VERSION}
