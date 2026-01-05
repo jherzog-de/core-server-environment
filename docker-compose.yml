@@ -3,11 +3,6 @@ networks:
     name: "traefik_net"
     driver: bridge
 
-volumes:
-  portainer_data:
-  grafana_data:
-  prometheus_data:
-
 services:
   
   traefik:
@@ -57,64 +52,3 @@ services:
       - "traefik.http.routers.portainer.tls=true"
       - "traefik.http.routers.portainer.tls.certresolver=letsencrypt"
       - "traefik.http.services.portainer.loadbalancer.server.port=9000"
-  
-  prometheus:
-    image: prom/prometheus:${PROMETHEUS_VERSION}
-    container_name: prometheus
-    restart: unless-stopped
-    user: "1000"
-    networks:
-      - traefik_net
-    environment:
-      - TZ=${TZ}
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
-      - ${VOLUME_PATH_PROMETHEUS}/prometheus.yml:/etc/prometheus/prometheus.yml:ro
-      - ${VOLUME_PATH_PROMETHEUS}/persistant:/prometheus
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.prometheus.rule=Host(`${PROMETHEUS_DOMAIN}`)"
-      - "traefik.http.routers.prometheus.entrypoints=websecure"
-      - "traefik.http.routers.prometheus.tls=true"
-      - "traefik.http.routers.prometheus.tls.certresolver=letsencrypt"
-      - "traefik.http.services.prometheus.loadbalancer.server.port=9090"
-
-  grafana:
-    image: grafana/grafana:${GRAFANA_VERSION}
-    container_name: grafana
-    restart: unless-stopped
-    user: "1000"
-    networks:
-      - traefik_net
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
-      - ${VOLUME_PATH_GRAFANA}:/var/lib/grafana
-    environment:
-      - GF_SECURITY_ADMIN_USER=${GRAFANA_ADMIN_USER}
-      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_ADMIN_PASSWORD}
-      - TZ=${TZ}
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.grafana.rule=Host(`${GRAFANA_DOMAIN}`)"
-      - "traefik.http.routers.grafana.entrypoints=websecure"
-      - "traefik.http.routers.grafana.tls=true"
-      - "traefik.http.routers.grafana.tls.certresolver=letsencrypt"
-      - "traefik.http.services.grafana.loadbalancer.server.port=3000"
-  
-  node-exporter:
-    image: prom/node-exporter:${NODE_EXPORTER_VERSION}
-    container_name: node-exporter
-    restart: unless-stopped
-    user: "1000"
-    networks:
-      - traefik_net
-    environment:
-      - TZ=${TZ}
-    volumes:
-      - /proc:/host/proc:ro
-      - /sys:/host/sys:ro
-      - /:/rootfs:ro
-    command:
-      - '--path.procfs=/host/proc'
-      - '--path.sysfs=/host/sys'
-      - '--path.rootfs=/rootfs'
