@@ -3,6 +3,9 @@ networks:
     name: "traefik_net"
     driver: bridge
 
+volumes:
+  portainer-data:
+
 services:
   
   traefik:
@@ -21,9 +24,9 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ${VOLUME_PATH_TRAEFIK}/traefik.yml:/traefik.yml:ro
-      - ${VOLUME_PATH_TRAEFIK}/secrets/dashboard.htpasswd:/run/secrets/dashboard.htpasswd:ro
-      - ${VOLUME_PATH_TRAEFIK}/acme.json:/acme.json
+      - ./traefik/traefik.yml:/traefik.yml:ro
+      - ./traefik/secrets/dashboard.htpasswd:/run/secrets/dashboard.htpasswd:ro
+      - ./traefik/acme.json:/acme.json
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.traefik.rule=Host(`${TRAEFIK_DOMAIN}`)"
@@ -47,7 +50,7 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ${VOLUME_PATH_PORTAINER}:/data
+      - portainer-data:/data
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.portainer.rule=Host(`${PORTAINER_DOMAIN}`)"
