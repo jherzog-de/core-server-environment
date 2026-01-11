@@ -4,10 +4,10 @@ networks:
     driver: bridge
 
 volumes:
-  portainer-data:
+  portainer_data:
 
 services:
-  
+
   traefik:
     image: traefik:${TRAEFIK_VERSION}
     container_name: traefik
